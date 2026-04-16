@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -23,20 +21,7 @@ func run() error {
 	tourRepo := tour.NewPgRepo(nil)
 	tourService := tour.NewTourService(&tourRepo)
 
-	r.Post("/tours", func(w http.ResponseWriter, r *http.Request) {
-		var payload tour.Tour
-
-		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-			fmt.Println(err)
-			w.WriteHeader(http.StatusBadRequest)
-			w.Write(nil)
-			return
-		}
-
-		fmt.Println(payload)
-
-		tourService.Insert(r.Context(), payload)
-	})
+	r.Post("/tours", tour.PostTourHandler(tourService))
 
 	s := http.Server{
 		Addr:    ":8080",
