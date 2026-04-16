@@ -12,7 +12,7 @@ import (
 )
 
 // tests that repo correctly saves a new object
-func TestSaveTourRepo(t *testing.T) {
+func TestSaveScheduleRepo(t *testing.T) {
 	connString, close := testhelpers.GetConnString(t)
 	defer close()
 
@@ -21,10 +21,10 @@ func TestSaveTourRepo(t *testing.T) {
 	connPool, err := pgxpool.New(t.Context(), connString)
 	assert.NoError(t, err)
 
-	tourRepo := NewPgRepo(connPool)
+	scheduleRepo := NewPgRepo(connPool)
 
 	newSchedule := Schedule{TourId: 1, StartsAt: time.Now().AddDate(0, 0, 15).Round(time.Second).UTC()}
-	id := tourRepo.Insert(t.Context(), newSchedule)
+	id := scheduleRepo.Insert(t.Context(), newSchedule)
 
 	var schedule ScheduleWithId
 	err = connPool.QueryRow(t.Context(), "select * from schedule where id = $1", id).Scan(&schedule.Id, &schedule.Schedule.TourId, &schedule.Schedule.StartsAt)
