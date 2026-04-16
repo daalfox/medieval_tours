@@ -8,7 +8,7 @@ import (
 )
 
 type Order struct {
-	Desc string
+	Desc string `json:"description"`
 }
 
 type OrderWithId struct {
@@ -16,7 +16,7 @@ type OrderWithId struct {
 	Order Order
 }
 
-func insertOrder(ctx context.Context, pool *pgxpool.Pool, order Order) int64 {
+func InsertOrder(ctx context.Context, pool *pgxpool.Pool, order Order) int64 {
 	var id int64
 	err := pool.QueryRow(ctx, "insert into api_order(description) values ($1) returning id", order.Desc).Scan(&id)
 	if err != nil {

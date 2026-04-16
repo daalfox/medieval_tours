@@ -22,7 +22,7 @@ func TestSaveOrder(t *testing.T) {
 	}
 
 	newOrder := Order{Desc: "some description"}
-	id := insertOrder(t.Context(), connPool, newOrder)
+	id := InsertOrder(t.Context(), connPool, newOrder)
 
 	var desc string
 	connPool.QueryRow(t.Context(), "select description from api_order where id = $1", id).Scan(&desc)
