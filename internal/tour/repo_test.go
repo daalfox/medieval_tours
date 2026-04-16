@@ -10,7 +10,8 @@ import (
 	"github.com/daalfox/medieval_tours/internal/testhelpers"
 )
 
-func TestSaveTour(t *testing.T) {
+// tests that repo correctly saves a new object
+func TestSaveTourRepo(t *testing.T) {
 	connString, close := testhelpers.GetConnString(t)
 	defer close()
 
