@@ -1,4 +1,4 @@
-package order
+package tour
 
 import (
 	"testing"
@@ -21,10 +21,10 @@ func TestSaveOrder(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	newOrder := Order{Desc: "some description"}
-	id := InsertOrder(t.Context(), connPool, newOrder)
+	newOrder := Tour{Desc: "some description"}
+	id := InsertTour(t.Context(), connPool, newOrder)
 
 	var desc string
-	connPool.QueryRow(t.Context(), "select description from api_order where id = $1", id).Scan(&desc)
+	connPool.QueryRow(t.Context(), "select description from tour where id = $1", id).Scan(&desc)
 	assert.Equal(t, desc, newOrder.Desc)
 }

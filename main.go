@@ -6,7 +6,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/daalfox/medieval_tours/internal/order"
+	"github.com/daalfox/medieval_tours/internal/tour"
 	"github.com/go-chi/chi/v5"
 )
 
@@ -20,8 +20,8 @@ func main() {
 func run() error {
 	r := chi.NewRouter()
 
-	r.Post("/orders", func(w http.ResponseWriter, r *http.Request) {
-		var payload order.Order
+	r.Post("/tours", func(w http.ResponseWriter, r *http.Request) {
+		var payload tour.Tour
 
 		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
 			fmt.Println(err)
@@ -32,7 +32,7 @@ func run() error {
 
 		fmt.Println(payload)
 
-		order.InsertOrder(r.Context(), nil, payload)
+		tour.InsertTour(r.Context(), nil, payload)
 	})
 
 	s := http.Server{

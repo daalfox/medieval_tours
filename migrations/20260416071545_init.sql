@@ -1,8 +1,8 @@
 -- +goose Up
-CREATE TABLE api_order (
+CREATE TABLE tour (
     id BIGSERIAL PRIMARY KEY,
     description TEXT NOT NULL
 );
 
 -- +goose Down
-DROP TABLE IF EXISTS api_order;
+DROP TABLE IF EXISTS tour;
