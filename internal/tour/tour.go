@@ -8,7 +8,8 @@ import (
 )
 
 type Tour struct {
-	Desc string `json:"description"`
+	Title string `json:"title"`
+	Desc  string `json:"description"`
 }
 
 type TourWithId struct {
@@ -16,9 +17,9 @@ type TourWithId struct {
 	Tour Tour
 }
 
-func InsertTour(ctx context.Context, pool *pgxpool.Pool, order Tour) int64 {
+func InsertTour(ctx context.Context, pool *pgxpool.Pool, tour Tour) int64 {
 	var id int64
-	err := pool.QueryRow(ctx, "insert into tour(description) values ($1) returning id", order.Desc).Scan(&id)
+	err := pool.QueryRow(ctx, "insert into tour(title, description) values($1, $2) returning id", tour.Title, tour.Desc).Scan(&id)
 	if err != nil {
 		log.Println(err)
 	}
