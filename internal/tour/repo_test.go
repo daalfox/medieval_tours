@@ -21,8 +21,10 @@ func TestSaveTour(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	tourRepo := NewPgRepo(connPool)
+
 	newTour := Tour{Title: "some title", Desc: "some description"}
-	id := InsertTour(t.Context(), connPool, newTour)
+	id := tourRepo.Insert(t.Context(), newTour)
 
 	var tour TourWithId
 	connPool.QueryRow(t.Context(), "select * from tour where id = $1", id).Scan(&tour.Id, &tour.Tour.Title, &tour.Tour.Desc)

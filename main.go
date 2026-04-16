@@ -20,6 +20,9 @@ func main() {
 func run() error {
 	r := chi.NewRouter()
 
+	tourRepo := tour.NewPgRepo(nil)
+	tourService := tour.NewTourService(&tourRepo)
+
 	r.Post("/tours", func(w http.ResponseWriter, r *http.Request) {
 		var payload tour.Tour
 
@@ -32,7 +35,7 @@ func run() error {
 
 		fmt.Println(payload)
 
-		tour.InsertTour(r.Context(), nil, payload)
+		tourService.Insert(r.Context(), payload)
 	})
 
 	s := http.Server{
