@@ -1,7 +1,8 @@
-package tour
+package schedule
 
 import (
 	"testing"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/jackc/pgx/v5/stdlib"
@@ -22,13 +23,13 @@ func TestSaveTourRepo(t *testing.T) {
 
 	tourRepo := NewPgRepo(connPool)
 
-	newTour := Tour{Title: "some title", Desc: "some description"}
-	id := tourRepo.Insert(t.Context(), newTour)
+	newSchedule := Schedule{TourId: 1, StartsAt: time.Now().AddDate(0, 0, 15).Round(time.Second).UTC()}
+	id := tourRepo.Insert(t.Context(), newSchedule)
 
-	var tour TourWithId
-	err = connPool.QueryRow(t.Context(), "select * from tour where id = $1", id).Scan(&tour.Id, &tour.Tour.Title, &tour.Tour.Desc)
+	var schedule ScheduleWithId
+	err = connPool.QueryRow(t.Context(), "select * from schedule where id = $1", id).Scan(&schedule.Id, &schedule.Schedule.TourId, &schedule.Schedule.StartsAt)
 	assert.NoError(t, err)
 
-	assert.Equal(t, tour.Tour.Title, newTour.Title)
-	assert.Equal(t, tour.Tour.Desc, newTour.Desc)
+	assert.Equal(t, schedule.Schedule.TourId, newSchedule.TourId)
+	assert.WithinDuration(t, schedule.Schedule.StartsAt, newSchedule.StartsAt, time.Second)
 }
