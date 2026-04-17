@@ -6,6 +6,12 @@ import (
 	"net/http"
 )
 
+func GetTourHandler(svc TourService) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		svc.List(r.Context())
+	}
+}
+
 func PostTourHandler(svc TourService) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var payload Tour

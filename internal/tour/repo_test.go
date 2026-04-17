@@ -22,13 +22,22 @@ func TestSaveTourRepo(t *testing.T) {
 
 	tourRepo := NewPgRepo(connPool)
 
-	newTour := Tour{Title: "some title", Desc: "some description"}
-	id := tourRepo.Insert(t.Context(), newTour)
+	t.Run("lists data", func(t *testing.T) {
+		tours, err := tourRepo.List(t.Context())
+		assert.NoError(t, err)
 
-	var tour TourWithId
-	err = connPool.QueryRow(t.Context(), "select * from tour where id = $1", id).Scan(&tour.Id, &tour.Tour.Title, &tour.Tour.Desc)
-	assert.NoError(t, err)
+		assert.Equal(t, len(tours), 1)
+	})
 
-	assert.Equal(t, tour.Tour.Title, newTour.Title)
-	assert.Equal(t, tour.Tour.Desc, newTour.Desc)
+	t.Run("saves data", func(t *testing.T) {
+		newTour := Tour{Title: "some title", Desc: "some description"}
+		id := tourRepo.Insert(t.Context(), newTour)
+
+		var tour TourWithId
+		err = connPool.QueryRow(t.Context(), "select * from tour where id = $1", id).Scan(&tour.Id, &tour.Tour.Title, &tour.Tour.Desc)
+		assert.NoError(t, err)
+
+		assert.Equal(t, tour.Tour.Title, newTour.Title)
+		assert.Equal(t, tour.Tour.Desc, newTour.Desc)
+	})
 }

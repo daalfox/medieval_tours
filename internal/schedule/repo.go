@@ -4,10 +4,12 @@ import (
 	"context"
 	"log"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type repo interface {
+	List(context.Context) ([]ScheduleWithId, error)
 	Insert(context.Context, Schedule) int64
 }
 
@@ -21,6 +23,22 @@ func NewPgRepo(pool *pgxpool.Pool) PgRepo {
 	return PgRepo{
 		pool: pool,
 	}
+}
+
+func (r PgRepo) List(ctx context.Context) ([]ScheduleWithId, error) {
+	rows, _ := r.pool.Query(ctx, "select * from schedule")
+	schedules, err := pgx.CollectRows(rows, func(row pgx.CollectableRow) (ScheduleWithId, error) {
+		s := ScheduleWithId{}
+		if err := row.Scan(&s.Id, &s.Schedule.TourId, &s.Schedule.StartsAt); err != nil {
+			return s, err
+		}
+		return s, nil
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return schedules, nil
 }
 
 func (r PgRepo) Insert(ctx context.Context, schedule Schedule) int64 {

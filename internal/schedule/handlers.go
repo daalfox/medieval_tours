@@ -6,6 +6,12 @@ import (
 	"net/http"
 )
 
+func GetScheduleHandler(svc ScheduleService) func(http.ResponseWriter, *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		svc.List(r.Context())
+	}
+}
+
 func PostScheduleHandler(svc ScheduleService) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var payload Schedule

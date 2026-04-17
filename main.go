@@ -27,8 +27,14 @@ func run() error {
 	scheduleRepo := schedule.NewPgRepo(&pool)
 	scheduleService := schedule.NewScheduleService(&scheduleRepo)
 
-	r.Post("/tours", tour.PostTourHandler(tourService))
-	r.Post("/schedules", schedule.PostScheduleHandler(scheduleService))
+	r.Route("/tours", func(r chi.Router) {
+		r.Get("", tour.GetTourHandler(tourService))
+		r.Post("", tour.PostTourHandler(tourService))
+	})
+	r.Route("/schedules", func(r chi.Router) {
+		r.Get("", schedule.GetScheduleHandler(scheduleService))
+		r.Post("", schedule.PostScheduleHandler(scheduleService))
+	})
 
 	s := http.Server{
 		Addr:    ":8080",

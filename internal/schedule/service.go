@@ -14,6 +14,9 @@ func NewScheduleService(r repo) ScheduleService {
 	}
 }
 
+func (t ScheduleService) List(ctx context.Context) ([]ScheduleWithId, error) {
+	return t.repo.List(ctx)
+}
 func (t ScheduleService) Insert(ctx context.Context, schedule Schedule) int64 {
 	return t.repo.Insert(ctx, schedule)
 }
