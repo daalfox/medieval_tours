@@ -8,6 +8,6 @@ type Schedule struct {
 }
 
 type ScheduleWithId struct {
-	Id       int64
-	Schedule Schedule
+	Id       int64    `json:"id"`
+	Schedule Schedule `json:"schedule"`
 }
