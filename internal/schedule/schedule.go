@@ -4,6 +4,7 @@ import "time"
 
 type Schedule struct {
 	TourId   int64     `json:"tour_id"`
+	Price    int       `json:"price"`
 	StartsAt time.Time `json:"starts_at"`
 }
 

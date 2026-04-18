@@ -7,6 +7,7 @@ CREATE TABLE tour (
 CREATE TABLE schedule (
     id BIGSERIAL PRIMARY KEY,
     tour_id BIGINT REFERENCES tour(id),
+    price INT NOT NULL,
     starts_at TIMESTAMP NOT NULL
 );
 

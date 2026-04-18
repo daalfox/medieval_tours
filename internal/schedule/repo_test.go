@@ -25,14 +25,15 @@ func TestScheduleRepo(t *testing.T) {
 	scheduleRepo := NewPgRepo(connPool)
 
 	t.Run("saves data", func(t *testing.T) {
-		newSchedule := Schedule{TourId: 1, StartsAt: time.Now().AddDate(0, 0, 15).Round(time.Second).UTC()}
+		newSchedule := Schedule{TourId: 1, Price: 48_000, StartsAt: time.Now().AddDate(0, 0, 15).Round(time.Second).UTC()}
 		id := scheduleRepo.Insert(t.Context(), newSchedule)
 
 		var schedule ScheduleWithId
-		err = connPool.QueryRow(t.Context(), "select * from schedule where id = $1", id).Scan(&schedule.Id, &schedule.Schedule.TourId, &schedule.Schedule.StartsAt)
+		err = connPool.QueryRow(t.Context(), "select * from schedule where id = $1", id).Scan(&schedule.Id, &schedule.Schedule.TourId, &schedule.Schedule.Price, &schedule.Schedule.StartsAt)
 		assert.NoError(t, err)
 
 		assert.Equal(t, schedule.Schedule.TourId, newSchedule.TourId)
+		assert.Equal(t, schedule.Schedule.Price, newSchedule.Price)
 		assert.WithinDuration(t, schedule.Schedule.StartsAt, newSchedule.StartsAt, time.Second)
 	})
 
